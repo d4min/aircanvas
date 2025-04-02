@@ -64,9 +64,6 @@ class HandTracker:
                     self.mp_drawing_styles.get_default_hand_landmarks_style(),
                     self.mp_drawing_styles.get_default_hand_connections_style()
                 )
-        # Debug: Print if landmarks were found
-        if self.landmark_positions:
-            print(f"Hand tracker found {len(self.landmark_positions)} hands with {len(self.landmark_positions[0])} landmarks")
 
         return frame
     

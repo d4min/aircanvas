@@ -11,6 +11,11 @@ AirCanvas is a computer vision project that lets you draw using hand gestures. B
     - Landmark detection
     - Gesture recognition basics
 
-3. Phase 3: Gesture System 🔄
+3. Phase 3: Gesture System ✅
     - Advanced gestures
     - Gesture-to-action mapping
+
+4. Phase 4: Canvas System 🔄
+    - Drawing implementation
+    - Tool selection 
+

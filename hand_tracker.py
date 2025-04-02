@@ -66,3 +66,57 @@ class HandTracker:
                 )
 
         return frame
+    
+    def get_landmark_positions(self):
+        """Return the current landmark positions"""
+        return self.landamark_positions
+    
+    def fingertip_positions(self):
+        """Return positions of just the fingertips"""
+        fingertip_positions = []
+
+        for hand_landmarks in self.landmark_positions:
+            fingertips = [hand_landmarks[tip_id] for tip_id in self.fingertips]
+            fingertip_positions.append(fingertips)
+
+        return fingertip_positions
+
+    def count_fingers_up(self):
+        """Count how many fingers are up"""
+        if not self.landmark_positions:
+            return 0 
+        
+        fingers_up = 0
+        hand_landmarks = self.landmark_positions[0] 
+
+        # Check thumb
+        if hand_landmarks[self.fingertips[4]][0] < hand_landmarks[self.finger_bases[4]][0]:
+            fingers_up += 1
+            # Check other fingers
+            for idx in range(4):
+                # If fingertip is higher (lower y value) than base joint
+                if hand_landmarks[self.fingertips[idx]][1] < hand_landmarks[self.finger_bases[idx]][1]:
+                    fingers_up += 1
+        
+            return fingers_up
+        
+    def is_pinch_gesture(self):
+        """Detect pinch gesture (index finger and thumb)"""
+        if not self.landmark_positions:
+            return False
+        
+        hand_landmarks = self.landmark_positions[0]
+        # Calculate distance between index fingertip and thumb tip 
+        index_tip = hand_landmarks[self.fingertips[0]]
+        thumb_tip = hand_landmarks[self.fingertips[4]]
+
+        distance = np.sqrt((index_tip[0] - thumb_tip[0])**2 + (index_tip[1] - thumb_tip[1])**2)
+
+        # If distance is less than 40 pixels, consider it a pinch
+        return distance < 40
+    
+    def release(self):
+        """Release resources"""
+        self.hands.close()
+
+        

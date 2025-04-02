@@ -99,3 +99,45 @@ class GestureRecogniser:
         
         # Update and return gesture state
         return self._update_gesture_state(gesture_type, gesture_position, frame_time)
+    
+    def _update_gesture_state(self, detected_gesture, position, frame_time):
+        """Update gesture sttae with stability checks"""
+        # If gesture changed, start stability counter 
+        if detected_gesture != self.previous_gesture:
+            self.gesture_stability_count = 1
+            self.previous_gesture = detected_gesture   
+            return self.current_gesture, self.gesture_position 
+        
+        # If same gesture, increment stabililty counter
+        self.gesture_stability_count += 1
+
+        # Only update current gesture if stable enough 
+        if self.gesture_stability_count >= self.required_stability_count:
+            # If gesture changed, update start time and duration 
+            if self.current_gesture != detected_gesture:
+                self.gesture_start_time = frame_time
+                self.gesture_duration = 0
+            else:
+                self.gesture_duration = frame_time - self.gesture_start_time
+
+            self.current_gesture = detected_gesture
+
+            # Update position with smoothing 
+            if position is not None:
+                if self.gesture_position is None:
+                    self.gesture_position = position
+                else:
+                    # Apply smoothing 
+                    self.previous_positions.append(position)
+                    if len(self.previous_positions) > self.max_position_history:
+                        self.previous_positions.pop(0)
+
+                    # Average the positions for stability
+                    avg_x = sum(pos[0] for pos in self.previous_positions) / len(self.previous_positions)
+                    avg_y = sum(pos[1] for pos in self.previous_positions) / len(self.previous_positions)
+                    self.gesture_position = (int(avg_x), int(avg_y))
+            else:
+                self.gesture_position = None
+                self.previous_positions = []
+        
+        return self.current_gesture, self.gesture_position

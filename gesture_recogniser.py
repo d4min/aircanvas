@@ -38,11 +38,15 @@ class GestureRecogniser:
         Recognise gestures from hand landmarks
         Returns the current gesture type and position 
         """
+        print(f"Received landmarks: {type(hand_landmarks)}, Length: {len(hand_landmarks) if hand_landmarks else 0}")
+
         if not hand_landmarks or len(hand_landmarks) == 0:
+            print("No hand landmarks received in recognize_gesture")
             return self._update_gesture_state(GestureType.NONE, None, frame_time)
         
         # Use first hand's landmarks
         landmarks = hand_landmarks[0]
+        print(f"First hand has {len(landmarks)} landmarks")
 
         # Extract key points
         index_tip = landmarks[8]

@@ -24,7 +24,7 @@ class HandTracker:
         self.mp_drawing_styles = mp.solutions.drawing_styles
 
         # List of landmark positions 
-        self.landamark_positions = []
+        self.landmark_positions = []
 
         # Fingertip IDs (index, middle, ring, pinky, thumb)
         self.fingertips = [8, 12, 16, 20, 4]
@@ -72,7 +72,7 @@ class HandTracker:
     
     def get_landmark_positions(self):
         """Return the current landmark positions"""
-        return self.landamark_positions
+        return self.landmark_positions
     
     def fingertip_positions(self):
         """Return positions of just the fingertips"""

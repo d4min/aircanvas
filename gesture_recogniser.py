@@ -163,3 +163,26 @@ class GestureRecogniser:
         """Check if a finger is pointing up (y-coordinate is less than base)"""
         return landmarks[fingertip_idx][1] < landmarks[base_idx][1]
     
+    def get_gesture_info(self):
+        """Get current gesture information"""
+        return {
+            'type': self.current_gesture,
+            'position': self.gesture_position,
+            'duration': self.gesture_duration,
+            'is_drawing': self.is_drawing
+        }
+    
+    def update_drawing_state(self):
+        """Update drawing state based on current gesture"""
+        # Start drawing when gesture changes to DRAW
+        if self.current_gesture == GestureType.DRAW and self.is_drawing:
+            self.is_drawing = True
+            self.draw_start_position = self.gesture_position
+
+        #Stop drawing when gesture is no longer DRAW
+        elif self.current_gesture != GestureType.DRAW and self.is_drawing:
+            self.is_drawing = False
+            self.draw_start_position = None
+
+        return self.is_drawing, self.draw_start_position
+

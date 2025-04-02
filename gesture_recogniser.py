@@ -141,3 +141,25 @@ class GestureRecogniser:
                 self.previous_positions = []
         
         return self.current_gesture, self.gesture_position
+    
+    def _calculate_distance(self, point1, point2):
+        """Calculate Euclidean distance between two points"""
+        return math.sqrt((point1[0] - point2[0])**2 + (point1[1] - point2[1])**2)
+
+    def _midpoint(self, point1, point2):
+        """Calculate the midpoint between two points"""
+        return (int((point1[0] + point2[0]) / 2), int((point1[1] + point2[1]) / 2))
+    
+    def _calculate_center_point(self, points):
+        """Calculate the center point of a set of points"""
+        if not points:
+            return None 
+        
+        sum_x = sum(point[0] for point in points)
+        sum_y = sum(point[1] for point in points)
+        return (int(sum_x / len(points)), int(sum_y / len(points)))
+    
+    def _is_finger_up(self, landmarks, fingertip_idx, base_idx):
+        """Check if a finger is pointing up (y-coordinate is less than base)"""
+        return landmarks[fingertip_idx][1] < landmarks[base_idx][1]
+    

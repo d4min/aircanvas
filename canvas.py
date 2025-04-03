@@ -51,4 +51,25 @@ class Canvas:
         self.history_index = 0
         self.max_history = 20
 
-        
+    def setup_ui_areas(self):
+        """Set up UI element areas (color palette, tools)"""
+        # Define color palette area - top row
+        self.color_palette_area = []
+        for i, color in enumerate(self.colors):
+            x1 = 10 + i * (self.color_box_size + 5)
+            y1 = 10
+            x2 = x1 + self.color_box_size
+            y2 = y1 + self.color_box_size
+            self.color_palette_area.append((x1, y1, x2, y2, color))
+
+        # Define tool selection area - left column
+        self.tool_selection_area = []
+        tool_icons = [
+            "PEN", "ERASER", "LINE", "RECT", "CIRCLE"
+        ]
+        for i, tool in enumerate(tool_icons):
+            x1 = 10
+            y1 = 50 + i * (self.tool_box_size + 5)
+            x2 = x1 + self.tool_box_size
+            y2 = y1 + self.tool_box_size
+            self.tool_selection_area.append((x1, y1, x2, y2, tool))

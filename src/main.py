@@ -4,6 +4,7 @@ from config import *
 from hand_tracker import HandTracker
 from gesture import GestureRecogniser, GestureType
 from drawing import DrawingCanvas
+from ui import UIManager
 
 def initialise_camera():
     cap = cv2.VideoCapture(0)
@@ -18,6 +19,7 @@ def main():
     tracker = HandTracker()
     gesture_recogniser = GestureRecogniser()
     canvas = DrawingCanvas(CAMERA_WIDTH, CAMERA_HEIGHT)
+    ui_manager = UIManager(CAMERA_WIDTH, CAMERA_HEIGHT)
 
     while True:
         success, frame = cap.read()
@@ -62,15 +64,10 @@ def main():
                     canvas.draw(index_finger)
                     
             elif gesture == GestureType.SELECT:
-                # Tool selection will be implemented here
-                pass
+                color_selected, color = ui_manager.check_color_selection(index_finger)
+                if color_selected:
+                    canvas.set_color(color)
                 
-            elif gesture == GestureType.CLEAR:
-                canvas.clear()
-            else:
-                canvas.stop_drawing()
-                canvas.set_tool("pen")  # Reset to pen when not drawing
-        
         # Combine canvas with camera feed
         # Draw canvas content
         drawing_display = canvas.get_display()
@@ -84,10 +81,7 @@ def main():
         frame = cv2.add(frame_bg, drawing_fg)
         
         # Add UI elements
-        cv2.putText(frame, f"Gesture: {gesture.value}", (10, 30),
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
-        cv2.putText(frame, f"Tool: {canvas.current_tool}", (10, 70),
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+        ui_manager.draw_ui(frame)
         
 
         cv2.imshow('AirCanvas', frame)
